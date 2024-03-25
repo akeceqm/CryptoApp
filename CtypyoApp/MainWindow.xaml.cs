@@ -17,7 +17,6 @@ namespace CryptoUI
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
         

@@ -52,9 +52,9 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <!-- Названия столбцов -->
-                        <TextBlock Grid.Column="0" Foreground="White" Text="Иконка" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Foreground="White" Text="Монета" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <TextBlock Grid.Column="1" Padding="0,0,0,0" Foreground="White" Text="Название" HorizontalAlignment="Center"/>
-                        <TextBlock Grid.Column="2" Padding="0,0,0,0" Foreground="White" Text="Цена" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Padding="0,0,0,0" Foreground="White" Text="Цена($)" HorizontalAlignment="Center"/>
                         <TextBlock Grid.Column="3" Padding="0,0,0,0" Foreground="White" Text="Объем торгов 24ч" HorizontalAlignment="Center"/>
                         <TextBlock Grid.Column="4" Padding="0,0,0,0"  Foreground="White" Text="Макс/Мин цена за 24ч" HorizontalAlignment="Center"/>
                     </Grid>
@@ -90,11 +90,11 @@
                         </DataGrid.ColumnHeaderStyle>
 
                         <DataGrid.Columns>
-                            <!-- Столбец "Иконка" -->
-                            <DataGridTemplateColumn Header="Иконка">
+                            <!-- Столбец "Изображение" -->
+                            <DataGridTemplateColumn Header="Монета">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Image Width="30" Source="{Binding Path=Image}"/>
+                                        <Image Width="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding Image}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

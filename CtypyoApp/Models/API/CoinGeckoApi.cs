@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinGecko.Parameters;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -18,33 +19,6 @@ namespace CtypyoApp.Models.API
         public CoinGeckoApi()
         {
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
-        }
-
-        public async Task<List<string>> GetSupportedCurrenciesAsync()
-        {
-            string url = $"https://api.coingecko.com/api/v3/simple/supported_vs_currencies";
-
-            try
-            {
-                HttpResponseMessage response = await _httpClient.GetAsync(url);
-
-                string jsonResponse = "";
-
-                if (response.IsSuccessStatusCode)
-                    jsonResponse = await response.Content.ReadAsStringAsync();
-                else
-                    jsonResponse = APIResponceImitation.GetSupportedCurrenciesAsync();
-
-                List<string> supportedCurrencySymbols = JsonConvert.DeserializeObject<List<string>>(jsonResponse);
-
-                return supportedCurrencySymbols;
-            }
-            catch (Exception)
-            {
-                // Обработка ошибок здесь
-            }
-
-            return new List<string>();
         }
 
         public async Task<List<CryptoCurrency>> GetTopNCurrenciesAsync(int topN, int pageNum)
@@ -75,6 +49,66 @@ namespace CtypyoApp.Models.API
             }
 
             return new List<CryptoCurrency>();
+        }
+
+        public async Task<decimal> GetCurrencyPriceByIdAsync(string id, string targetCurrencyId)
+        {
+            string url = $"https://api.coingecko.com/api/v3/simple/price?ids={id}&vs_currencies={targetCurrencyId}&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false";
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+                string jsonResponse = "";
+
+                if (response.IsSuccessStatusCode)
+                    jsonResponse = await response.Content.ReadAsStringAsync();
+                else
+                    jsonResponse = APIResponceImitation.GetCurrencyPriceByIdAsync();
+
+                CurrencyDetails currencyDetails = await GetCurrencyDetailsByIdAsync(id, targetCurrencyId);
+
+                decimal price = (decimal)currencyDetails.Price;
+
+                return price;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return -1;
+        }
+        public async Task<CurrencyDetails> GetCurrencyDetailsByIdAsync(string id, string targetCurrencyId)
+        {
+            string url = $"https://api.coingecko.com/api/v3/coins/{id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false";
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+                string jsonResponse = "";
+
+                if (response.IsSuccessStatusCode)
+                    jsonResponse = await response.Content.ReadAsStringAsync();
+                else
+                    jsonResponse = APIResponceImitation.GetCurrencyDetailsByIdAsync();
+
+                JObject jsonObject = JObject.Parse(jsonResponse);
+
+                CurrencyDetails CryptoCurrency = new CurrencyDetails();
+                CryptoCurrency.Id = (string)jsonObject["id"];
+                CryptoCurrency.Name = (string)jsonObject["symbol"];
+                CryptoCurrency.Image = (string)jsonObject["image"]["large"];
+                CryptoCurrency.Price = (decimal)jsonObject["market_data"]["current_price"][targetCurrencyId];
+                return CryptoCurrency;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return new CurrencyDetails();
         }
     }
 }
