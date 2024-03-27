@@ -51,6 +51,8 @@ namespace CtypyoApp.Models.API
             return new List<CryptoCurrency>();
         }
 
+        
+
         public async Task<decimal> GetCurrencyPriceByIdAsync(string id, string targetCurrencyId)
         {
             string url = $"https://api.coingecko.com/api/v3/simple/price?ids={id}&vs_currencies={targetCurrencyId}&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false";
@@ -68,7 +70,7 @@ namespace CtypyoApp.Models.API
 
                 CurrencyDetails currencyDetails = await GetCurrencyDetailsByIdAsync(id, targetCurrencyId);
 
-                decimal price = (decimal)currencyDetails.Price;
+                decimal price = currencyDetails.Price;
 
                 return price;
             }
@@ -101,6 +103,7 @@ namespace CtypyoApp.Models.API
                 CryptoCurrency.Name = (string)jsonObject["symbol"];
                 CryptoCurrency.Image = (string)jsonObject["image"]["large"];
                 CryptoCurrency.Price = (decimal)jsonObject["market_data"]["current_price"][targetCurrencyId];
+                CryptoCurrency.Volume = (decimal)jsonObject["market_data"]["total_volume"][targetCurrencyId];
                 return CryptoCurrency;
             }
             catch (Exception)
