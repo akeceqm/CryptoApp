@@ -52,16 +52,16 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <!-- Названия столбцов -->
-                        <TextBlock Grid.Column="0" Foreground="White" Text="Монета" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" Padding="0,0,0,0" Foreground="White" Text="Название" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Padding="0,0,0,0" Foreground="White" Text="Монета" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Padding="0,0,0,0" Foreground="White" Text="Название" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <TextBlock Grid.Column="2" Padding="0,0,0,0" Foreground="White" Text="Цена($)" HorizontalAlignment="Center"/>
                         <TextBlock Grid.Column="3" Padding="0,0,0,0" Foreground="White" Text="Объем торгов 24ч" HorizontalAlignment="Center"/>
-                        <TextBlock Grid.Column="4" Padding="0,0,0,0"  Foreground="White" Text="Макс/Мин цена за 24ч" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Padding="0,0,0,0"  Foreground="White" Text="Переход к монете" HorizontalAlignment="Center"/>
                     </Grid>
                 </Border>
 
                 <!-- Таблица DataGrid в ScrollViewer -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,10,0,0">
                     <DataGrid x:Name="DataGrid"
                   CanUserAddRows="False"
                   IsReadOnly="True"
@@ -78,7 +78,7 @@
                   Foreground="#fff"
                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
-                        <!-- CСтили для header -->
+                        <!-- Cтили для header -->
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Background" Value="#000A17"/>
@@ -110,7 +110,7 @@
                             </DataGridTextColumn>
 
                             <!-- Столбец "Цена"  -->
-                            <DataGridTextColumn Width="*" Binding="{Binding Price}" IsReadOnly="True">
+                            <DataGridTextColumn Width="*" Binding="{Binding Price, StringFormat={}{0:c}}"  IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -119,8 +119,8 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
 
-                            <!-- Столбец "Цена"  -->
-                            <DataGridTextColumn Binding="{Binding Volume}" Width="*" IsReadOnly="True">
+                            <!-- Столбец "Объем торгов 24ч"  -->
+                            <DataGridTextColumn Binding="{Binding Volume, StringFormat={}{0:c}}" Width="*" IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -129,33 +129,20 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
 
-                            <!--  Столбец "Объем торгов 24ч" -->
+                            <!--  Столбец "Мин/Макс цена за 24часа" -->
                             <DataGridTemplateColumn Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Vertical" Margin="8,8,10,8">
-                                            <TextBlock Text="{Binding MaxPrice24h}" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="{Binding MinPrice24h}" HorizontalAlignment="Center"/>
-                                        </StackPanel>
-                                    </DataTemplate>
+                                        <Border CornerRadius="20" Style="{StaticResource borderBackNextButton}">
+                                            <Label Style="{StaticResource labelNextBorder}"/>
+                                        </Border>
+                                        </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-
-
-                            <!--Кнопка для перехода на страницу монеты-->
-                            <!--<DataGridTemplateColumn Width="*">
-                                <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border Background="Black" Padding="15" CornerRadius="30" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                    <Label Content="->" ForceCursor="True" Foreground="Wheat" FontSize="10"/>
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>-->
                         </DataGrid.Columns>
                     </DataGrid>
                 </ScrollViewer>
-            </Grid>
+            </Grid> 
 
 
             <!-- Добавленная  бокового меню для навигации между таблицами -->
