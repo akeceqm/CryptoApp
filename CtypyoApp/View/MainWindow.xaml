@@ -61,7 +61,7 @@
                 </Border>
 
                 <!-- Таблица DataGrid в ScrollViewer -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,10,0,0">
+                <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"  Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,10,0,0">
                     <DataGrid x:Name="DataGrid"
                   CanUserAddRows="False"
                   IsReadOnly="True"
@@ -129,12 +129,12 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
 
-                            <!--  Столбец "Мин/Макс цена за 24часа" -->
+                            <!--  Открыть монету -->
                             <DataGridTemplateColumn Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Border CornerRadius="20" Style="{StaticResource borderBackNextButton}">
-                                            <Label Style="{StaticResource labelNextBorder}"/>
+                                        <Border MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave" CornerRadius="30">
+                                            <Label Content="Open" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fff"/>
                                         </Border>
                                         </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

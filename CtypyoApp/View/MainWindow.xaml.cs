@@ -1,12 +1,8 @@
 ﻿using CtypyoApp.Models.API;
-using FontAwesome.WPF;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using static CtypyoApp.Models.API.CoinGeckoApi;
 
 
 namespace CryptoUI
@@ -71,6 +67,52 @@ namespace CryptoUI
                 BorderScreen.CornerRadius = new CornerRadius(0);
                 WindowState = WindowState.Maximized;
             }
+        }
+
+        private void Border_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (sender is Border borderNextDataGrid)
+            {
+                borderNextDataGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7163ba"));
+                borderNextDataGrid.VerticalAlignment = VerticalAlignment.Center;
+                borderNextDataGrid.HorizontalAlignment = HorizontalAlignment.Center;
+                borderNextDataGrid.Width = 45;
+                borderNextDataGrid.Height = 45;
+                if(borderNextDataGrid.Child is Label labelBorderNext)
+                {
+                    labelBorderNext.Content = "Next";
+                    labelBorderNext.FontSize = 14;
+                    labelBorderNext.VerticalAlignment = VerticalAlignment.Center;
+                    labelBorderNext.HorizontalAlignment = HorizontalAlignment.Center;
+                }
+            } 
+        }
+
+        private void Border_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (sender is Border borderNextDataGrid)
+            {
+                borderNextDataGrid.Background = Brushes.Transparent;
+                if (borderNextDataGrid.Child is Label labelBorderNext)
+                {
+                    labelBorderNext.Content = "Open";
+                    labelBorderNext.FontSize = 12;
+                }
+            }
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer scroll = sender as ScrollViewer;
+            if (e.Delta > 0)
+            {
+                scroll.LineUp();
+            }
+            else
+            {
+                scroll.LineDown();
+            }
+            e.Handled=true;
         }
     }
 }
