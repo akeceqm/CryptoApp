@@ -7,9 +7,12 @@ using System.Windows.Media;
 
 namespace CryptoUI
 {
+
     public partial class MainWindow : Window
     {
+
         private CoinGeckoApi coinGeckoAPI = new CoinGeckoApi();
+        private List<CryptoCurrency> topCurrencies = new List<CryptoCurrency>();
         public MainWindow()
         {
             InitializeComponent();
@@ -42,7 +45,7 @@ namespace CryptoUI
             try
             {
                 // Получаем список топ N криптовалют
-                List<CryptoCurrency> topCurrencies = await coinGeckoAPI.GetTopNCurrenciesAsync(250, 1);
+                topCurrencies = await coinGeckoAPI.GetTopNCurrenciesAsync(250, 1);
 
                 // Привязываем список к DataGrid
                 DataGrid.ItemsSource = topCurrencies;
@@ -113,6 +116,60 @@ namespace CryptoUI
                 scroll.LineDown();
             }
             e.Handled=true;
+        }
+
+        private void borderClickDataGrid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid.Visibility= Visibility.Visible;
+            DataGridMainPoolCrypto.Visibility = Visibility.Collapsed;
+            ConverterCoin.Visibility = Visibility.Collapsed;
+            borderHeaderDataGrid.Visibility = Visibility.Visible;
+            borderClickDataGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4E00AC"));
+            borderClickDataGridMainPoolCrypto.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7163ba"));
+            borderConverterCoin.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7163ba"));
+        }
+
+        private void borderClickDataGridMainPoolCrypto_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid.Visibility = Visibility.Collapsed;
+            DataGridMainPoolCrypto.Visibility = Visibility.Visible;
+            ConverterCoin.Visibility = Visibility.Collapsed;
+            borderHeaderDataGrid.Visibility = Visibility.Visible;
+            borderClickDataGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7163ba"));
+            borderClickDataGridMainPoolCrypto.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4E00AC"));
+            borderConverterCoin.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7163ba"));
+        }
+
+        private void borderConverterCoin_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid.Visibility = Visibility.Collapsed;
+            DataGridMainPoolCrypto.Visibility = Visibility.Collapsed;
+            ConverterCoin.Visibility = Visibility.Visible;
+            borderHeaderDataGrid.Visibility = Visibility.Collapsed;
+            borderClickDataGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7163ba"));
+            borderClickDataGridMainPoolCrypto.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7163ba"));
+            borderConverterCoin.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4E00AC"));
+        }
+
+        private void coinInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchText = coinInput.Text.ToLower();
+            List<CryptoCurrency> filteredList = topCurrencies
+        .Where(coin =>
+            coin.Symbol.ToLower().Contains(searchText) ||
+            coin.Name.ToLower().Contains(searchText) ||
+            coin.Name.ToLower().StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+            listCoin.ItemsSource = filteredList;
+            if (filteredList.Count > 1)
+            {
+                listCoin.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                listCoin.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

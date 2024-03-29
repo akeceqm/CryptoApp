@@ -34,16 +34,43 @@
                 <Border Grid.Column="0" Style="{StaticResource moveCursorInBorderFullScreen}" Cursor="Hand" MouseDown="FullScreenButton_Click" Width="20" Height="20" CornerRadius="30"/>
             </Grid>
 
-
             <!-- Добавленная таблица DataGrid -->
-            <Grid Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="20,60,20,20">
+            <Grid Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="20,10,20,20">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <!--Поиск монеты-->
+                <Border Grid.Row="0" Margin="0,0,0,20" CornerRadius="10" BorderThickness="2" Background="#000A17"  Width="300" Height="100" HorizontalAlignment="Right">
+                    <ListBox BorderBrush="DarkBlue" BorderThickness="2" Background="Transparent" Foreground="DarkCyan" x:Name="listCoin" Visibility="Collapsed">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Padding" Value="5"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="5">
+                                    <Image Source="{Binding Image}" Width="20" Height="20" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding Name}" Foreground="White" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
 
-                <Border Background="#192038" Padding="16,10,5,10" CornerRadius="10">
-                    <Grid Grid.Row="0"  Margin="10,10,10,10">
+                <!--Поиск монеты-->
+                <Border Grid.Row="0" HorizontalAlignment="Left" CornerRadius="10" Width="550" Height="40"  BorderBrush="DarkBlue" BorderThickness="2">
+                    <TextBox TextChanged="coinInput_TextChanged" Padding="5,5,5,0" x:Name="coinInput" VerticalAlignment="Center" HorizontalAlignment="left"  FontSize="18" Width="550" Height="40" Foreground="#fff" BorderThickness="0" Background="Transparent" />
+                </Border>
+
+
+
+                <Border x:Name="borderHeaderDataGrid" Background="#192038" Padding="16,10,5,10" Margin="0,155,0,0" CornerRadius="10">
+                    <Grid Grid.Row="1"  Margin="10,10,10,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="2*"/>
@@ -60,8 +87,8 @@
                     </Grid>
                 </Border>
 
-                <!-- Таблица DataGrid в ScrollViewer -->
-                <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"  Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,10,0,0">
+                <!-- Основной DataGrid с криптой -->
+                <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"  Grid.Row="2" VerticalScrollBarVisibility="Hidden" Margin="0,10,0,0">
                     <DataGrid x:Name="DataGrid"
                   CanUserAddRows="False"
                   IsReadOnly="True"
@@ -136,28 +163,136 @@
                                         <Border MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave" CornerRadius="30">
                                             <Label Content="Open" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fff"/>
                                         </Border>
-                                        </DataTemplate>
+                                    </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </ScrollViewer>
-            </Grid> 
+
+                <!--Второй DataGrid избранные монеты-->
+                <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"  Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,10,0,0" Visibility="Collapsed">
+                    <DataGrid x:Name="DataGridMainPoolCrypto"
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  VirtualizingPanel.IsVirtualizing="True"
+                  RowBackground="Transparent"
+                  BorderThickness="1"
+                  BorderBrush="#7163ba"
+                  Background="#000A17"
+                  HeadersVisibility="Column"
+                  ColumnHeaderHeight="10"
+                  RowHeight="50"
+                  GridLinesVisibility="None"
+                  Foreground="#fff"
+                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+
+                        <!-- Cтили для header -->
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#000A17"/>
+                                <Setter Property="Foreground" Value="#fff"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="10"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+
+                        <DataGrid.Columns>
+                            <!-- Столбец "Изображение" -->
+                            <DataGridTemplateColumn Header="Монета">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Width="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding Image}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Столбец "Название" -->
+                            <DataGridTextColumn Binding="{Binding Name}" Width="2*" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Столбец "Цена"  -->
+                            <DataGridTextColumn Width="*" Binding="{Binding Price, StringFormat={}{0:c}}"  IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Столбец "Объем торгов 24ч"  -->
+                            <DataGridTextColumn Binding="{Binding Volume, StringFormat={}{0:c}}" Width="*" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!--  Открыть монету -->
+                            <DataGridTemplateColumn Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave" CornerRadius="30">
+                                            <Label Content="Open" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fff"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </Grid>
+
+            <!--Третий Grid конвертер валют-->
+            <Grid x:Name="ConverterCoin" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Cryptocurrency Converter" FontSize="20" FontWeight="Bold" Margin="10" Foreground="White"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="Amount: " VerticalAlignment="Center" Foreground="White"/>
+                    <TextBox Text="{Binding Amount, Mode=TwoWay}" Width="100" Margin="5" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="Source Currency: " VerticalAlignment="Center" Foreground="White"/>
+                    <ComboBox  ItemsSource="{Binding SupportedCurrencies}" SelectedItem="{Binding SourceCurrency, Mode=TwoWay}" Width="100" Margin="5"/>
+                    <TextBlock Foreground="White" Text="Target Currency: " VerticalAlignment="Center" Margin="10, 0, 0, 0"/>
+                    <ComboBox  ItemsSource="{Binding SupportedCurrencies}" SelectedItem="{Binding TargetCurrency, Mode=TwoWay}" Width="100" Margin="5"/>
+                </StackPanel>
+
+                <TextBlock Foreground="White" Text="{Binding ConvertedAmountLabel}" Grid.Row="3" Margin="10" FontWeight="Bold"/>
+            </Grid>
+
 
 
             <!-- Добавленная  бокового меню для навигации между таблицами -->
             <Grid Grid.Column="0" HorizontalAlignment="Left" Margin="20">
                 <Border Height="200" Width="65" CornerRadius="30" Background="#7163ba">
                     <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-                        <Border  Style="{StaticResource moveCursorInBorderLeftMenu}"  Width="40" Height="40" CornerRadius="10">
+                        <Border Background="#4E00AC" MouseDown="borderClickDataGrid_MouseDown" x:Name="borderClickDataGrid"  Style="{StaticResource moveCursorInBorderLeftMenu}"  Width="40" Height="40" CornerRadius="10">
                             <fa:ImageAwesome Icon="Exchange" Width="20" />
                         </Border>
 
-                        <Border Style="{StaticResource moveCursorInBorderLeftMenu}"  Width="40" Height="40" CornerRadius="10">
+                        <Border MouseDown="borderClickDataGridMainPoolCrypto_MouseDown" x:Name="borderClickDataGridMainPoolCrypto" Style="{StaticResource moveCursorInBorderLeftMenu}"  Width="40" Height="40" CornerRadius="10">
                             <fa:ImageAwesome Icon="Bookmark" Width="20" />
                         </Border>
 
-                        <Border Style="{StaticResource moveCursorInBorderLeftMenu}" Width="40" Height="40" CornerRadius="10">
+                        <Border MouseDown="borderConverterCoin_MouseDown" x:Name="borderConverterCoin" Style="{StaticResource moveCursorInBorderLeftMenu}" Width="40" Height="40" CornerRadius="10">
                             <fa:ImageAwesome Icon="LineChart" Width="20" />
                         </Border>
                     </StackPanel>
