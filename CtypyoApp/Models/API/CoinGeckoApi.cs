@@ -21,6 +21,33 @@ namespace CtypyoApp.Models.API
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
         }
 
+        public async Task<List<string>> GetSupportedCurrenciesAsync()
+        {
+            string url = $"https://api.coingecko.com/api/v3/simple/supported_vs_currencies";
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+                string jsonResponse = "";
+
+                if (response.IsSuccessStatusCode)
+                    jsonResponse = await response.Content.ReadAsStringAsync();
+                else
+                    jsonResponse = APIResponceImitation.GetSupportedCurrenciesAsync();
+
+                List<string> supportedCurrencySymbols = JsonConvert.DeserializeObject<List<string>>(jsonResponse);
+
+                return supportedCurrencySymbols;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return new List<string>();
+        }
+
         public async Task<List<CryptoCurrency>> GetTopNCurrenciesAsync(int topN, int pageNum)
         {
             string validatedTopN = topN > 250 ? "250" : (topN < 0 ? "1" : topN.ToString());
