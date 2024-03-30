@@ -161,15 +161,8 @@ namespace CryptoUI
             coin.Name.ToLower().StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
         .ToList();
 
-            listCoin.ItemsSource = filteredList;
-            if (filteredList.Count > 1)
-            {
-                listCoin.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                listCoin.Visibility = Visibility.Collapsed;
-            }
+            DataGrid.ItemsSource = filteredList;
+
         }
     }
 }

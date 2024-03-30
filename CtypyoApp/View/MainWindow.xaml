@@ -41,49 +41,29 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <!--Поиск монеты-->
-                <Border Grid.Row="0" Margin="0,0,0,20" CornerRadius="10" BorderThickness="2" Background="#000A17"  Width="300" Height="100" HorizontalAlignment="Right">
-                    <ListBox BorderBrush="DarkBlue" BorderThickness="2" Background="Transparent" Foreground="DarkCyan" x:Name="listCoin" Visibility="Collapsed">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Padding" Value="5"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <Image Source="{Binding Image}" Width="20" Height="20" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding Name}" Foreground="White" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Border>
 
                 <!--Поиск монеты-->
-                <Border Grid.Row="0" HorizontalAlignment="Left" CornerRadius="10" Width="550" Height="40"  BorderBrush="DarkBlue" BorderThickness="2">
-                    <TextBox TextChanged="coinInput_TextChanged" Padding="5,5,5,0" x:Name="coinInput" VerticalAlignment="Center" HorizontalAlignment="left"  FontSize="18" Width="550" Height="40" Foreground="#fff" BorderThickness="0" Background="Transparent" />
+                <Border Grid.Row="0" HorizontalAlignment="Left" CornerRadius="10" Width="800" Height="40"  BorderBrush="DarkBlue" BorderThickness="2">
+                    <TextBox TextChanged="coinInput_TextChanged" Padding="5,5,5,0" x:Name="coinInput" VerticalAlignment="Center" HorizontalAlignment="Center"  FontSize="18" Width="800" Height="40" Foreground="#fff" BorderThickness="0" Background="Transparent" />
                 </Border>
-
-
 
                 <Border x:Name="borderHeaderDataGrid" Background="#192038" Padding="16,10,5,10" Margin="0,155,0,0" CornerRadius="10">
                     <Grid Grid.Row="1"  Margin="10,10,10,10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="42.04"/>
+                            <ColumnDefinition Width="100*"/>
+                            <ColumnDefinition Width="89*"/>
+                            <ColumnDefinition Width="101*"/>
+                            <ColumnDefinition Width="100*"/>
+                            <ColumnDefinition Width="77*"/>
                         </Grid.ColumnDefinitions>
                         <!-- Названия столбцов -->
                         <TextBlock Grid.Column="0" Padding="0,0,0,0" Foreground="White" Text="Монета" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <TextBlock Grid.Column="1" Padding="0,0,0,0" Foreground="White" Text="Название" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <TextBlock Grid.Column="2" Padding="0,0,0,0" Foreground="White" Text="Цена($)" HorizontalAlignment="Center"/>
-                        <TextBlock Grid.Column="3" Padding="0,0,0,0" Foreground="White" Text="Объем торгов 24ч" HorizontalAlignment="Center"/>
-                        <TextBlock Grid.Column="4" Padding="0,0,0,0"  Foreground="White" Text="Переход к монете" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Padding="0,0,0,0" Foreground="White" Text="Символы" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Padding="0,0,0,0" Foreground="White" Text="Цена" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Padding="0,0,0,0" Foreground="White" Text="Объем торгов 24ч" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="5" Padding="0,0,0,0"  Foreground="White" Text="Переход к монете" HorizontalAlignment="Center"/>
                     </Grid>
                 </Border>
 
@@ -127,7 +107,17 @@
                             </DataGridTemplateColumn>
 
                             <!-- Столбец "Название" -->
-                            <DataGridTextColumn Binding="{Binding Name}" Width="2*" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding Name}" Width="*" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Столбец "Символы"  -->
+                            <DataGridTextColumn Width="*" Binding="{Binding Symbol}"  IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -145,6 +135,8 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
+                            
+
 
                             <!-- Столбец "Объем торгов 24ч"  -->
                             <DataGridTextColumn Binding="{Binding Volume, StringFormat={}{0:c}}" Width="*" IsReadOnly="True">

@@ -128,6 +128,7 @@ namespace CtypyoApp.Models.API
                 CurrencyDetails CryptoCurrency = new CurrencyDetails();
                 CryptoCurrency.Id = (string)jsonObject["id"];
                 CryptoCurrency.Name = (string)jsonObject["symbol"];
+                CryptoCurrency.Symbol = (string)jsonObject["symbol"];
                 CryptoCurrency.Image = (string)jsonObject["image"]["large"];
                 CryptoCurrency.Price = (decimal)jsonObject["market_data"]["current_price"][targetCurrencyId];
                 CryptoCurrency.Volume = (decimal)jsonObject["market_data"]["total_volume"][targetCurrencyId];
